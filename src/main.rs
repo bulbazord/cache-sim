@@ -3,10 +3,12 @@ extern crate getopts;
 use getopts::Options;
 use std::env;
 
+mod cache;
+
 const C1_DEFAULT: u8    = 12;
 const B1_DEFAULT: u8    = 5;
 const S1_DEFAULT: u8    = 3;
-const V_DEFAULT: u8     = 3;
+const V_DEFAULT:  u8    = 3;
 const C2_DEFAULT: u8    = 15;
 const B2_DEFAULT: u8    = 5;
 const S2_DEFAULT: u8    = 4;
@@ -80,7 +82,13 @@ fn main() {
         None => S2_DEFAULT,
     };
 
-    println!("Cache Parameters: ({}, {}, {}, {}, {}, {}, {})",
-            c1, b1, s1, v, c2, b2, s2);
+    println!("Cache Settings");
+    println!("c: {}", c1);
+    println!("b: {}", b1);
+    println!("s: {}", s1);
+    println!("v: {}", v);
+    println!("C: {}", c2);
+    println!("B: {}", b2);
+    println!("S: {}", s2);
 
 }
