@@ -5,13 +5,13 @@ use std::env;
 
 mod cache;
 
-const C1_DEFAULT: u8    = 12;
-const B1_DEFAULT: u8    = 5;
-const S1_DEFAULT: u8    = 3;
-const V_DEFAULT:  u8    = 3;
-const C2_DEFAULT: u8    = 15;
-const B2_DEFAULT: u8    = 5;
-const S2_DEFAULT: u8    = 4;
+const C1_DEFAULT: u64    = 12;
+const B1_DEFAULT: u64    = 5;
+const S1_DEFAULT: u64    = 3;
+const V_DEFAULT:  u64    = 3;
+const C2_DEFAULT: u64   = 15;
+const B2_DEFAULT: u64   = 5;
+const S2_DEFAULT: u64   = 4;
 
 fn print_usage() {
     println!("cachesim [OPTIONS] < traces/file.trace");
@@ -54,31 +54,31 @@ fn main() {
     }
 
     let c1 = match matches.opt_str("c") {
-        Some(s) => s.parse::<u8>().unwrap(),
+        Some(s) => s.parse::<u64>().unwrap(),
         None => C1_DEFAULT,
     };
     let b1 = match matches.opt_str("b") {
-        Some(s) => s.parse::<u8>().unwrap(),
+        Some(s) => s.parse::<u64>().unwrap(),
         None => B1_DEFAULT,
     };
     let s1 = match matches.opt_str("s") {
-        Some(s) => s.parse::<u8>().unwrap(),
+        Some(s) => s.parse::<u64>().unwrap(),
         None => S1_DEFAULT,
     };
     let v = match matches.opt_str("v") {
-        Some(s) => s.parse::<u8>().unwrap(),
+        Some(s) => s.parse::<u64>().unwrap(),
         None => V_DEFAULT,
     };
     let c2 = match matches.opt_str("C") {
-        Some(s) => s.parse::<u8>().unwrap(),
+        Some(s) => s.parse::<u64>().unwrap(),
         None => C2_DEFAULT,
     };
     let b2 = match matches.opt_str("B") {
-        Some(s) => s.parse::<u8>().unwrap(),
+        Some(s) => s.parse::<u64>().unwrap(),
         None => B2_DEFAULT,
     };
     let s2 = match matches.opt_str("S") {
-        Some(s) => s.parse::<u8>().unwrap(),
+        Some(s) => s.parse::<u64>().unwrap(),
         None => S2_DEFAULT,
     };
 
@@ -90,4 +90,7 @@ fn main() {
     println!("C: {}", c2);
     println!("B: {}", b2);
     println!("S: {}", s2);
+
+    let mut cache = cache::setup_cache(c1, b1, s1, v, c2, b2, s2);
+
 }
