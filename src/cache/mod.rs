@@ -1,3 +1,5 @@
 // put actual stuff here
 
-mod cachedefs;
+pub use self::cachedefs::CacheStats;
+
+pub mod cachedefs;

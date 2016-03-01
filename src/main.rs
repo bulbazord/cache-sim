@@ -90,5 +90,4 @@ fn main() {
     println!("C: {}", c2);
     println!("B: {}", b2);
     println!("S: {}", s2);
-
 }
