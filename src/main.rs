@@ -123,11 +123,11 @@ fn main() {
                 Err(f) => { panic!(f.to_string()) },
             };
 
-            //TODO: Replace 0u64 with properly converted address
             cache_system.cache_access(mode, address);
         }
     }
 
+    // 4.) Finish processing, and print out statistics
     cache_system.complete_cache();
 
     cache_system.print_statistics();
