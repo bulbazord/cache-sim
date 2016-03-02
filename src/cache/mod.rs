@@ -6,22 +6,22 @@ pub use self::cachedefs::AccessType;
 pub mod cachedefs;
 
 #[derive(Debug)]
-pub struct Cache {
+pub struct CacheSystem {
     pub stats: CacheStats,
 }
 
-impl Cache {
-    pub fn new() -> Cache {
-        Cache {
+impl CacheSystem {
+    pub fn new() -> CacheSystem {
+        CacheSystem {
             stats: CacheStats::new(),
         }
     }
 
     pub fn setup_cache(c1: u64, b1: u64, s1: u64, v: u64, c2: u64, b2: u64, s2: u64)
-        -> Cache {
+        -> CacheSystem {
         println!("Time to set up the cache");
         println!("Cache params: ({}, {}, {}, {}, {}, {}, {})", c1, b1, s1, v, c2, b2, s2);
-        Cache::new()
+        CacheSystem::new()
     }
 
     pub fn cache_access(&mut self, mode: AccessType, address: u64) {
