@@ -1,7 +1,11 @@
 extern crate getopts;
+extern crate regex;
 
-use getopts::Options;
 use std::env;
+use std::io::{self, Read};
+use getopts::Options;
+use regex::Regex;
+use cache::{AccessType, Cache};
 
 mod cache;
 
@@ -28,8 +32,8 @@ fn print_usage() {
 }
 
 fn main() {
+    // 1.) Begin by handling parameters
     let args : Vec<String> = env::args().collect();
-    //let program = args[0].clone();
 
     let mut opts = Options::new();
     opts.optflag("h", "help", "Print the help menu");
@@ -91,6 +95,40 @@ fn main() {
     println!("B: {}", b2);
     println!("S: {}", s2);
 
-    let mut cache = cache::setup_cache(c1, b1, s1, v, c2, b2, s2);
+    // 2.) Read the trace file
+    // The contents of the trace file should be in trace_buffer
+    // if the file was piped in through stdin
 
+    let mut trace_buffer = String::new();
+    if let Err(e) = io::stdin().read_to_string(&mut trace_buffer) {
+        panic!(e.to_string());
+    }
+
+    // 3.) Create cache system and begin processing
+    let mut cache_system = Cache::setup_cache(c1, b1, s1, v, c2, b2, s2);
+
+    let access_list = trace_buffer.split('\n');
+
+    let re = Regex::new(r"(r|w)(\s+)(0x[:xdigit:]+)").unwrap();
+    for access in access_list {
+        if let Some(cap) = re.captures(access) {
+            let mode: AccessType = match cap.at(1).unwrap() {
+                "r" => AccessType::Read,
+                "w" => AccessType::Write,
+                _ => { panic!("Malformed trace file!") },
+            };
+
+            let address = match u64::from_str_radix(&cap.at(3).unwrap()[2..], 16) {
+                Ok(v) => { v },
+                Err(f) => { panic!(f.to_string()) },
+            };
+
+            //TODO: Replace 0u64 with properly converted address
+            cache_system.cache_access(mode, address);
+        }
+    }
+
+    cache_system.complete_cache();
+
+    cache_system.print_statistics();
 }
