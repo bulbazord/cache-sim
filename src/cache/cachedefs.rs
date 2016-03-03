@@ -36,6 +36,30 @@ impl CacheStats {
 }
 
 #[derive(Debug)]
+pub struct Cache {
+    pub c:                  u64,
+    pub b:                  u64,
+    pub s:                  u64,
+    pub indexbits:          u64,
+    pub max_blocks_per_set: u64,
+    pub num_of_sets:        u64,
+}
+
+//TODO: ADD STORAGE USING VECDEQUE
+impl Cache {
+    pub fn new(c: u64, b: u64, s: u64) -> Cache {
+        Cache {
+            c: c,
+            b: b,
+            s: s,
+            indexbits: c - b - s,
+            max_blocks_per_set: (1u64 << s),
+            num_of_sets: (1u64 << (c - b - s)),
+        }
+    }
+}
+
+#[derive(Debug)]
 pub enum AccessType {
     Read,
     Write,

@@ -1,27 +1,21 @@
 // put actual stuff here
 
-pub use self::cachedefs::CacheStats;
-pub use self::cachedefs::AccessType;
+pub use self::cachedefs::{AccessType, CacheStats, Cache};
 
 pub mod cachedefs;
 
 #[derive(Debug)]
 pub struct CacheSystem {
     pub stats: CacheStats,
+    pub L1: Cache,
 }
 
 impl CacheSystem {
-    pub fn new() -> CacheSystem {
+    pub fn new(c1: u64, b1: u64, s1: u64, v: u64, c2: u64, b2: u64, s2: u64) -> CacheSystem {
         CacheSystem {
             stats: CacheStats::new(),
+            L1: Cache::new(c1, b1, s1),
         }
-    }
-
-    pub fn setup_cache(c1: u64, b1: u64, s1: u64, v: u64, c2: u64, b2: u64, s2: u64)
-        -> CacheSystem {
-        println!("Time to set up the cache");
-        println!("Cache params: ({}, {}, {}, {}, {}, {}, {})", c1, b1, s1, v, c2, b2, s2);
-        CacheSystem::new()
     }
 
     pub fn cache_access(&mut self, mode: AccessType, address: u64) {

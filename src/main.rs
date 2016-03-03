@@ -105,7 +105,7 @@ fn main() {
     }
 
     // 3.) Create cache system and begin processing
-    let mut cache_system = CacheSystem::setup_cache(c1, b1, s1, v, c2, b2, s2);
+    let mut cache_system = CacheSystem::new(c1, b1, s1, v, c2, b2, s2);
 
     let access_list = trace_buffer.split('\n');
 
