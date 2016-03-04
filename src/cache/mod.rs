@@ -20,6 +20,10 @@ impl CacheSystem {
 
     pub fn cache_access(&mut self, mode: AccessType, address: u64) {
         println!("Trying to {:?} at address {:#X}", mode, address);
+        let in_l1 = self.search_l1(mode, address);
+        if !in_l1 {
+            self.move_to_l1(mode, address);
+        }
     }
 
     pub fn complete_cache(&mut self) {
@@ -41,5 +45,41 @@ impl CacheSystem {
         println!("Write backs from L2: {}", self.stats.write_back_l2);
         println!("Victim hits: {}", self.stats.victim_hits);
         println!("Average access time: {}", self.stats.avg_access_time_l1);
+    }
+
+    fn search_l1(&mut self, mode: AccessType, address: u64) -> bool {
+        let ref mut stats = self.stats;
+        let ref mut cache = self.l1;
+        stats.accesses += 1;
+
+        let found = false;
+        let index = (address >> cache.b) & ((1u64 << cache.indexbits) - 1);
+        let tag = address >> (cache.b + cache.indexbits);
+
+        let selected_set = cache.sets.get_mut(index as usize);
+        if let Some(set) = selected_set {
+            for i in set.into_iter() {
+                println!("{:?}", i);
+            }
+        } else {
+            panic!("Address index out of bounds in L1! Panic!")
+        }
+
+        if let AccessType::Read = mode {
+            stats.reads += 1;
+            if !found {
+                stats.read_misses_l1 += 1;
+            }
+        } else {
+            stats.writes += 1;
+            if !found {
+                stats.write_misses_l1 += 1;
+            }
+        }
+
+        found
+    }
+
+    fn move_to_l1(&mut self, mode: AccessType, address: u64) {
     }
 }

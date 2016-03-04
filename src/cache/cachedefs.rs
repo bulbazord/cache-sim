@@ -1,5 +1,9 @@
 use std::collections::VecDeque;
 
+/* -CacheStats-
+ * Cache Stats are for keeping track of what happens during
+ * the cache simulation.
+ */
 #[derive(Debug)]
 pub struct CacheStats {
     pub accesses:           u64,
@@ -37,6 +41,10 @@ impl CacheStats {
     }
 }
 
+/* -Cache-
+ * A cache is defined by the parameters (c, b, s).
+ * The other data is out of convenience. Calculate once and store.
+ */
 #[derive(Debug)]
 pub struct Cache {
     pub c:                  u64,
@@ -48,7 +56,6 @@ pub struct Cache {
     pub sets:               Vec<VecDeque<CacheBlock>>,
 }
 
-//TODO: ADD STORAGE USING VECDEQUE
 impl Cache {
     pub fn new(c: u64, b: u64, s: u64) -> Cache {
         let mut ret_val = Cache {
@@ -69,28 +76,34 @@ impl Cache {
     }
 }
 
+/* -CacheBlock-
+ * A cacheblock (in hardware) is usually realized by tag and some metadata.
+ * I put tag in there for a "Calculate once, use many times" situation.
+ * The address is kept so that tag/index can be recalculated when moving a block around.
+ */
 #[derive(Debug)]
 pub struct CacheBlock {
     pub address: u64,
     pub tag: u64,
-    pub index: u64,
     pub valid: bool,
     pub dirty: bool,
 }
 
 impl CacheBlock {
-    pub fn new(a: u64, t: u64, i: u64, v: bool, d: bool) -> CacheBlock {
+    pub fn new(a: u64, t: u64, v: bool, d: bool) -> CacheBlock {
         CacheBlock {
             address: a,
             tag: t,
-            index: i,
             valid: v,
             dirty: d,
         }
     }
 }
 
-#[derive(Debug)]
+/* -AccessType-
+ * Wow enums are cool! An access is either a read or write. Easy as that.
+ */
+#[derive(Debug, Copy, Clone)]
 pub enum AccessType {
     Read,
     Write,
