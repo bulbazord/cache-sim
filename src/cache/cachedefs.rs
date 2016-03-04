@@ -85,16 +85,14 @@ impl Cache {
 pub struct CacheBlock {
     pub address: u64,
     pub tag: u64,
-    pub valid: bool,
     pub dirty: bool,
 }
 
 impl CacheBlock {
-    pub fn new(a: u64, t: u64, v: bool, d: bool) -> CacheBlock {
+    pub fn new(a: u64, t: u64, d: bool) -> CacheBlock {
         CacheBlock {
             address: a,
             tag: t,
-            valid: v,
             dirty: d,
         }
     }
