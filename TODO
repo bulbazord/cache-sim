@@ -1,6 +1,4 @@
-Finish implementing L1:
-    - Finish search_L1 by implementing checking for found block and updating.
-    - Implement move_to_L1
+Cleanup L1 code
 
 Implement VC
 
