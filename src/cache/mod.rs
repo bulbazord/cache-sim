@@ -7,14 +7,14 @@ pub mod cachedefs;
 #[derive(Debug)]
 pub struct CacheSystem {
     pub stats: CacheStats,
-    pub L1: Cache,
+    pub l1: Cache,
 }
 
 impl CacheSystem {
     pub fn new(c1: u64, b1: u64, s1: u64, v: u64, c2: u64, b2: u64, s2: u64) -> CacheSystem {
         CacheSystem {
             stats: CacheStats::new(),
-            L1: Cache::new(c1, b1, s1),
+            l1: Cache::new(c1, b1, s1),
         }
     }
 
