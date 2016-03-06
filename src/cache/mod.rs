@@ -67,7 +67,10 @@ impl CacheSystem {
                 }
             }
             if found {
-                let hot_block = set.remove(hot_block_index as usize).unwrap();
+                let mut hot_block = set.remove(hot_block_index as usize).unwrap();
+                if let AccessType::Write = mode {
+                    hot_block.dirty = true;
+                }
                 set.push_back(hot_block);
             }
         } else {
@@ -108,7 +111,10 @@ impl CacheSystem {
         let selected_set = cache.sets.get_mut(index as usize);
         if let Some(set) = selected_set {
             if set.len() >= cache.max_blocks_per_set as usize {
-                let _whocares = set.pop_front();
+                let evicted_block = set.pop_front().unwrap();
+                if evicted_block.dirty {
+                    stats.write_back_l1 += 1;
+                }
             }
             set.push_back(block_in);
         } else {

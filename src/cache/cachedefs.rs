@@ -88,16 +88,6 @@ pub struct CacheBlock {
     pub dirty: bool,
 }
 
-impl CacheBlock {
-    pub fn new(a: u64, t: u64, d: bool) -> CacheBlock {
-        CacheBlock {
-            address: a,
-            tag: t,
-            dirty: d,
-        }
-    }
-}
-
 /* -AccessType-
  * Wow enums are cool! An access is either a read or write. Easy as that.
  */
@@ -105,4 +95,13 @@ impl CacheBlock {
 pub enum AccessType {
     Read,
     Write,
+}
+
+/* -CacheLevels-
+ * An enumeration to represent which level of Cache we're dealing with.
+ */
+#[derive(Copy, Clone)]
+pub enum CacheLevel {
+    L1,
+    L2,
 }
