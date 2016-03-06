@@ -1,0 +1,10 @@
+Could make a general cache_search and cache_move function, with a param
+that indicates the cache level (L1 vs L2). This is to handle writebacks.
+If L1, we write back to L2 on dirty block eviction and move it to VC.
+If L2, we write back to memory in this design (i.e. block can fall off
+the face of the earth lol)
+
+This makes it easy to implement L2, and VC is just modifying one function and
+possibly adding another.
+
+Could clean up parsing of command line args in main.rs based on advice.

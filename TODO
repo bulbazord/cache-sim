@@ -1,7 +1,11 @@
 Cleanup L1 code
+    - Possibly generalize cache access functions?
 
 Implement VC
 
 Implement L2
+    - If generalized cache access functions, super easy.
 
 Debug(?)
+
+Cleanup all code
