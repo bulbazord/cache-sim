@@ -9,3 +9,5 @@ Implement L2
 Debug(?)
 
 Cleanup all code
+    - Modify Argument parsing by using a map function? CacheSystem::new() would
+        need to take in a tuple then? I think that's alright.

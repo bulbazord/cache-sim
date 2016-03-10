@@ -66,6 +66,7 @@ fn main() {
         }
     };
 
+    // The parsing. Maybe I can do some kind of map() instead?
     let c1 = matches.opt_str("c").and_then(|s| parse(s)).unwrap_or(C1_DEFAULT);
     let b1 = matches.opt_str("b").and_then(|s| parse(s)).unwrap_or(B1_DEFAULT);
     let s1 = matches.opt_str("s").and_then(|s| parse(s)).unwrap_or(S1_DEFAULT);
