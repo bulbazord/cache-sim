@@ -57,34 +57,22 @@ fn main() {
         return;
     }
 
-    let c1 = match matches.opt_str("c") {
-        Some(s) => s.parse::<u64>().unwrap(),
-        None => C1_DEFAULT,
+    // parse: String -> Option<u64>
+    let parse = |s: String| {
+        let result = s.parse::<u64>();
+        match result {
+            Ok(num) => { Some(num) },
+            Err(e) => { panic!(e.to_string()) },
+        }
     };
-    let b1 = match matches.opt_str("b") {
-        Some(s) => s.parse::<u64>().unwrap(),
-        None => B1_DEFAULT,
-    };
-    let s1 = match matches.opt_str("s") {
-        Some(s) => s.parse::<u64>().unwrap(),
-        None => S1_DEFAULT,
-    };
-    let v = match matches.opt_str("v") {
-        Some(s) => s.parse::<u64>().unwrap(),
-        None => V_DEFAULT,
-    };
-    let c2 = match matches.opt_str("C") {
-        Some(s) => s.parse::<u64>().unwrap(),
-        None => C2_DEFAULT,
-    };
-    let b2 = match matches.opt_str("B") {
-        Some(s) => s.parse::<u64>().unwrap(),
-        None => B2_DEFAULT,
-    };
-    let s2 = match matches.opt_str("S") {
-        Some(s) => s.parse::<u64>().unwrap(),
-        None => S2_DEFAULT,
-    };
+
+    let c1 = matches.opt_str("c").and_then(|s| parse(s)).unwrap_or(C1_DEFAULT);
+    let b1 = matches.opt_str("b").and_then(|s| parse(s)).unwrap_or(B1_DEFAULT);
+    let s1 = matches.opt_str("s").and_then(|s| parse(s)).unwrap_or(S1_DEFAULT);
+    let v =  matches.opt_str("v").and_then(|s| parse(s)).unwrap_or(V_DEFAULT);
+    let c2 = matches.opt_str("C").and_then(|s| parse(s)).unwrap_or(C2_DEFAULT);
+    let b2 = matches.opt_str("B").and_then(|s| parse(s)).unwrap_or(B2_DEFAULT);
+    let s2 = matches.opt_str("S").and_then(|s| parse(s)).unwrap_or(S2_DEFAULT);
 
     println!("Cache Settings");
     println!("c: {}", c1);
