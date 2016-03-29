@@ -1,5 +1,6 @@
 Cleanup L1 code
     - Possibly generalize cache access functions?
+    - Stop using regex. It's slow
 
 Implement VC
 
