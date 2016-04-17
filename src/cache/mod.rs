@@ -43,7 +43,7 @@ impl CacheSystem {
         println!("Write misses to L2: {}", self.stats.write_misses_l2);
         println!("Write backs from L1: {}", self.stats.write_back_l1);
         println!("Write backs from L2: {}", self.stats.write_back_l2);
-        println!("Victim hits: {}", self.stats.victim_hits);
+        println!("L1 victims hit in victim hits: {}", self.stats.victim_hits);
         println!("Average access time: {}", self.stats.avg_access_time_l1);
     }
 
