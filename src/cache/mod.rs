@@ -59,8 +59,8 @@ impl CacheSystem {
 
         let selected_set = cache.sets.get_mut(index as usize);
         if let Some(set) = selected_set {
-            for (count, i) in set.into_iter().enumerate() {
-                if tag == i.tag {
+            for (count, block) in set.into_iter().enumerate() {
+                if tag == block.tag {
                     hot_block_index = count as i64;
                     found = true;
                     break;

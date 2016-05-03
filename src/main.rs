@@ -106,7 +106,7 @@ fn main() {
                  _  => { panic!("Malformed trace file!") },
             };
 
-            let address = match u64::from_str_radix(&tokens[1][2..], 32) {
+            let address = match u64::from_str_radix(&tokens[1][2..], 16) {
                 Ok(v)  => { v },
                 Err(f) => { panic!(f.to_string()) },
             };

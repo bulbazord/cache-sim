@@ -22,7 +22,7 @@ pub struct CacheStats {
 }
 
 impl CacheStats {
-    pub fn new() -> CacheStats {
+    pub fn new() -> Self {
         CacheStats {
             accesses:           0u64,
             accesses_l2:        0u64,
@@ -43,7 +43,7 @@ impl CacheStats {
 
 /* -Cache-
  * A cache is defined by the parameters (c, b, s).
- * The other data is out of convenience. Calculate once and store.
+ * The other data is for convenience. Calculate once and store.
  */
 #[derive(Debug)]
 pub struct Cache {
@@ -57,7 +57,7 @@ pub struct Cache {
 }
 
 impl Cache {
-    pub fn new(c: u64, b: u64, s: u64) -> Cache {
+    pub fn new(c: u64, b: u64, s: u64) -> Self {
         let mut ret_val = Cache {
             c: c,
             b: b,
