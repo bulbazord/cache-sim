@@ -4,7 +4,6 @@ extern crate regex;
 use std::env;
 use std::io::{self, Read};
 use getopts::Options;
-use regex::Regex;
 use cache::{AccessType, CacheSystem};
 
 mod cache;
@@ -98,17 +97,17 @@ fn main() {
 
     let access_list = trace_buffer.split('\n');
 
-    let re = Regex::new(r"(r|w)(\s+)(0x[:xdigit:]+)").unwrap();
     for access in access_list {
-        if let Some(cap) = re.captures(access) {
-            let mode: AccessType = match cap.at(1).unwrap() {
+        let tokens: Vec<&str> = access.split_whitespace().collect();
+        if tokens.len() != 0 {
+            let mode: AccessType = match tokens[0] {
                 "r" => AccessType::Read,
                 "w" => AccessType::Write,
-                _ => { panic!("Malformed trace file!") },
+                 _  => { panic!("Malformed trace file!") },
             };
 
-            let address = match u64::from_str_radix(&cap.at(3).unwrap()[2..], 16) {
-                Ok(v) => { v },
+            let address = match u64::from_str_radix(&tokens[1][2..], 32) {
+                Ok(v)  => { v },
                 Err(f) => { panic!(f.to_string()) },
             };
 
