@@ -1,11 +1,5 @@
-Cleanup L1 code
-    - Possibly generalize cache access functions?
-    - Stop using regex. It's slow
-
-Implement VC
-
 Implement L2
-    - If generalized cache access functions, super easy.
+    - Borrow checker on my ass and I dunno shit about Rust. :(
 
 Debug(?)
 

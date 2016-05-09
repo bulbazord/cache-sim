@@ -41,6 +41,26 @@ impl CacheStats {
     }
 }
 
+/* -Victim Cache-
+ * Fully associative cache with v entries.
+ */
+#[derive(Debug)]
+pub struct VictimCache {
+    pub b: u64,
+    pub v: u64,
+    pub set: VecDeque<CacheBlock>,
+}
+
+impl VictimCache {
+    pub fn new(b: u64, v: u64) -> Self {
+        VictimCache {
+            b:      b,
+            v:      v,
+            set:    VecDeque::with_capacity(v as usize),
+        }
+    }
+}
+
 /* -Cache-
  * A cache is defined by the parameters (c, b, s).
  * The other data is for convenience. Calculate once and store.
@@ -95,13 +115,4 @@ pub struct CacheBlock {
 pub enum AccessType {
     Read,
     Write,
-}
-
-/* -CacheLevels-
- * An enumeration to represent which level of Cache we're dealing with.
- */
-#[derive(Copy, Clone)]
-pub enum CacheLevel {
-    L1,
-    L2,
 }
