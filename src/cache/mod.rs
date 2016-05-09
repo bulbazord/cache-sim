@@ -32,7 +32,7 @@ impl CacheSystem {
                 if self.vc.v > 0 {
                     print!("MV");
                 }
-                //let in_l2 = self.search_l2(mode, address);
+                let in_l2 = self.search_l2(mode, address);
             } else {
                 println!("HV**");
             }
@@ -68,16 +68,14 @@ impl CacheSystem {
     }
 
     fn search_l1(&mut self, mode: AccessType, address: u64) -> bool {
-        let ref mut stats = self.stats;
-        let ref mut cache = self.l1;
-        stats.accesses += 1;
+        self.stats.accesses += 1;
 
         let mut found = false;
         let mut hot_block_index = -1i64;
-        let index = (address >> cache.b) & ((1u64 << cache.indexbits) - 1);
-        let tag = address >> (cache.b + cache.indexbits);
+        let index = (address >> self.l1.b) & ((1u64 << self.l1.indexbits) - 1);
+        let tag = address >> (self.l1.b + self.l1.indexbits);
 
-        let selected_set = cache.sets.get_mut(index as usize);
+        let selected_set = self.l1.sets.get_mut(index as usize);
         if let Some(set) = selected_set {
             for (count, block) in set.into_iter().enumerate() {
                 if tag == block.tag {
@@ -99,14 +97,14 @@ impl CacheSystem {
 
 
         if let AccessType::Read = mode {
-            stats.reads += 1;
+            self.stats.reads += 1;
             if !found {
-                stats.read_misses_l1 += 1;
+                self.stats.read_misses_l1 += 1;
             }
         } else {
-            stats.writes += 1;
+            self.stats.writes += 1;
             if !found {
-                stats.write_misses_l1 += 1;
+                self.stats.write_misses_l1 += 1;
             }
         }
 
@@ -114,12 +112,8 @@ impl CacheSystem {
     }
 
     fn move_to_l1(&mut self, mode: AccessType, address: u64) {
-        let ref mut stats = self.stats;
-        let ref mut cache = self.l1;
-        let ref mut vc = self.vc;
-
-        let index = (address >> cache.b) & ((1u64 << cache.indexbits) - 1);
-        let tag = address >> (cache.b + cache.indexbits);
+        let index = (address >> self.l1.b) & ((1u64 << self.l1.indexbits) - 1);
+        let tag = address >> (self.l1.b + self.l1.indexbits);
         let block_in = CacheBlock {
             address: address,
             tag: tag,
@@ -129,12 +123,12 @@ impl CacheSystem {
             },
         };
 
-        let selected_set = cache.sets.get_mut(index as usize);
+        let selected_set = self.l1.sets.get_mut(index as usize);
         if let Some(set) = selected_set {
-            if set.len() >= cache.max_blocks_per_set as usize {
+            if set.len() >= self.l1.max_blocks_per_set as usize {
                 let mut evicted_block = set.pop_front().unwrap();
                 if evicted_block.dirty {
-                    stats.write_back_l1 += 1;
+                    self.stats.write_back_l1 += 1;
                     /*let in_l2 = self.search_l2(AccessType::Write, evicted_block.address);
                     if !in_l2 {
                         self.move_to_l2(AccessType::Write, evicted_block.address);
@@ -142,12 +136,12 @@ impl CacheSystem {
                 }
                 evicted_block.dirty = false;
 
-                if vc.v > 0 {
-                    if vc.set.len() == vc.v as usize {
-                        vc.set.pop_front();
+                if self.vc.v > 0 {
+                    if self.vc.set.len() == self.vc.v as usize {
+                        self.vc.set.pop_front();
                     }
-                    evicted_block.tag = evicted_block.address >> vc.b;
-                    vc.set.push_back(evicted_block);
+                    evicted_block.tag = evicted_block.address >> self.vc.b;
+                    self.vc.set.push_back(evicted_block);
                 }
             }
             set.push_back(block_in);
@@ -157,18 +151,16 @@ impl CacheSystem {
     }
 
     fn search_and_modify_vc(&mut self, address: u64) -> bool {
-        let ref mut stats = self.stats;
-        let ref mut vc = self.vc;
-        if vc.v == 0 {
+        if self.vc.v == 0 {
             return false;
         }
 
-        stats.accesses_vc += 1;
+        self.stats.accesses_vc += 1;
 
         let mut found = false;
         let mut hot_block_index = -1i64;
-        let tag = address >> vc.b;
-        let ref mut set = vc.set;
+        let tag = address >> self.vc.b;
+        let ref mut set = self.vc.set;
 
         for (count, block) in set.into_iter().enumerate() {
             if block.tag == tag {
@@ -180,23 +172,21 @@ impl CacheSystem {
 
         if found {
             set.remove(hot_block_index as usize).unwrap();
-            stats.victim_hits += 1;
+            self.stats.victim_hits += 1;
         }
 
         found
     }
 
     fn search_l2(&mut self, mode: AccessType, address: u64) -> bool {
-        let ref mut stats = self.stats;
-        let ref mut cache = self.l2;
-        stats.accesses_l2 += 1;
+        self.stats.accesses_l2 += 1;
 
         let mut found = false;
         let mut hot_block_index = -1i64;
-        let index = (address >> cache.b) & ((1u64 << cache.indexbits) - 1);
-        let tag = address >> (cache.b + cache.indexbits);
+        let index = (address >> self.l2.b) & ((1u64 << self.l2.indexbits) - 1);
+        let tag = address >> (self.l2.b + self.l2.indexbits);
 
-        let selected_set = cache.sets.get_mut(index as usize);
+        let selected_set = self.l2.sets.get_mut(index as usize);
         if let Some(set) = selected_set {
             for (count, block) in set.into_iter().enumerate() {
                 if tag == block.tag {
@@ -218,9 +208,9 @@ impl CacheSystem {
 
         if !found {
             if let AccessType::Read = mode {
-                stats.read_misses_l2 += 1;
+                self.stats.read_misses_l2 += 1;
             } else {
-                stats.write_misses_l2 += 1;
+                self.stats.write_misses_l2 += 1;
             }
         }
 
